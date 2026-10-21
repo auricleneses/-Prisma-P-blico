@@ -1,0 +1,14 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5088:10000"
+    environment:
+      ASPNETCORE_HTTP_PORTS: "10000"
+      PRISMA_DATA_DIR: /data
+      PRISMA_ADMIN_KEY: ${PRISMA_ADMIN_KEY:?Set PRISMA_ADMIN_KEY before starting}
+    volumes:
+      - prisma-data:/data
+
+volumes:
+  prisma-data:

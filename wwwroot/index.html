@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f6f3">
+  <title>Prisma Público | Casos públicos</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1d2925;
+      --muted: #5d6b65;
+      --line: #d5ddd8;
+      --paper: #f4f6f3;
+      --white: #fff;
+      --green: #1d614e;
+      --green-pale: #e4f1eb;
+      --candidate: #145b4b;
+      --candidate-pale: #e2efe9;
+      --amber: #805416;
+      --amber-pale: #fbf0d8;
+      --red: #973f3b;
+      --red-pale: #f8e9e6;
+      --slate: #52616c;
+      --slate-pale: #eaf0f3;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .masthead {
+      border-bottom: 1px solid var(--line);
+      background: var(--white);
+    }
+
+    .masthead-inner,
+    main,
+    footer {
+      width: min(100% - 40px, 980px);
+      margin-inline: auto;
+    }
+
+    .masthead-inner {
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 28px;
+      aspect-ratio: 1;
+      place-items: center;
+      background: var(--green);
+      color: white;
+      font-family: Georgia, serif;
+      font-size: 17px;
+    }
+
+    .edition {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    main { padding-block: 40px 56px; }
+
+    .intro {
+      display: grid;
+      grid-template-columns: 1fr minmax(220px, 300px);
+      align-items: end;
+      gap: 32px;
+      padding-bottom: 26px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 620px;
+      margin-bottom: 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(30px, 4vw, 46px);
+      font-weight: 500;
+      line-height: 1.1;
+    }
+
+    .dek {
+      max-width: 620px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .scope-note {
+      margin: 0;
+      padding: 12px 14px;
+      border-left: 3px solid #c08c3e;
+      background: #fff8e9;
+      color: #584523;
+      font-size: 13px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) minmax(165px, 210px) minmax(165px, 210px);
+      gap: 10px;
+      padding-block: 20px;
+    }
+
+    label { display: grid; gap: 5px; }
+
+    label span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    input, select {
+      width: 100%;
+      min-height: 42px;
+      padding: 8px 11px;
+      border: 1px solid #aebbb4;
+      border-radius: 3px;
+      background: white;
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+    }
+
+    input:focus, select:focus, a:focus-visible {
+      outline: 3px solid #8dbba8;
+      outline-offset: 2px;
+    }
+
+    .results-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      padding: 0 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .case-list { border-top: 1px solid var(--line); }
+
+    .case {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 22px;
+      padding: 23px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .case-meta { display: flex; flex-direction: column; gap: 9px; }
+
+    .person {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .person-candidate { color: var(--candidate); }
+
+    .candidate-label {
+      display: inline-flex;
+      align-self: flex-start;
+      padding: 3px 7px;
+      border-radius: 2px;
+      background: var(--candidate-pale);
+      color: var(--candidate);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .status {
+      display: inline-flex;
+      align-self: flex-start;
+      max-width: 100%;
+      padding: 4px 8px;
+      border-radius: 2px;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .status-investigation { background: var(--amber-pale); color: var(--amber); }
+    .status-allegation { background: #f3ece0; color: #705333; }
+    .status-annulled { background: var(--slate-pale); color: var(--slate); }
+    .status-acquittal { background: var(--green-pale); color: var(--green); }
+    .status-rejected { background: var(--red-pale); color: var(--red); }
+
+    time { color: var(--muted); font-size: 12px; }
+
+    .case h2 {
+      margin-bottom: 8px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.25;
+    }
+
+    .claim { margin-bottom: 11px; font-size: 15px; }
+
+    .plain-language {
+      margin-bottom: 14px;
+      padding: 11px 13px;
+      border-left: 2px solid var(--green);
+      background: white;
+      font-size: 14px;
+    }
+
+    .plain-language strong { color: var(--green); }
+
+    .source {
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+      text-underline-offset: 3px;
+    }
+
+    .empty, .loading, .error {
+      padding: 28px 0;
+      color: var(--muted);
+    }
+
+    footer {
+      padding-block: 16px 28px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 680px) {
+      .masthead-inner, main, footer { width: min(100% - 28px, 980px); }
+      main { padding-top: 28px; }
+      .intro { grid-template-columns: 1fr; gap: 18px; }
+      .controls { grid-template-columns: 1fr; }
+      .case { grid-template-columns: 1fr; gap: 9px; padding-block: 18px; }
+      .case-meta { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 7px 10px; }
+      .case h2 { font-size: 20px; }
+      .edition { max-width: 130px; text-align: right; }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="brand" href="/" aria-label="Prisma Público, página inicial">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <span>Prisma Público</span>
+      </a>
+      <span class="edition">Registros públicos · Brasil</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <h1 id="page-title">Casos explicados sem juridiquês</h1>
+        <p class="dek">O que foi alegado, o que os tribunais decidiram e o que ainda está sendo investigado.</p>
+      </div>
+      <p class="scope-note">Seleção de casos públicos com fontes. Não é uma lista completa de acusações. Investigação ou denúncia não significa culpa.</p>
+    </section>
+
+    <section class="controls" aria-label="Filtros de casos">
+      <label>
+        <span>Buscar</span>
+        <input id="search" type="search" placeholder="Nome, caso ou palavra" autocomplete="off">
+      </label>
+      <label>
+        <span>Pessoa</span>
+        <select id="person"><option value="">Todas as pessoas</option></select>
+      </label>
+      <label>
+        <span>Situação</span>
+        <select id="status"><option value="">Todas as situações</option></select>
+      </label>
+    </section>
+
+    <div class="results-meta" aria-live="polite">
+      <span id="count"></span>
+      <span>Atualizado conforme as fontes citadas</span>
+    </div>
+    <section id="cases" class="case-list" aria-label="Casos registrados">
+      <p class="loading">Carregando registros...</p>
+    </section>
+  </main>
+
+  <footer>Conteúdo informativo. Consulte a fonte original para detalhes e decisões completas.</footer>
+
+  <script>
+    const casesElement = document.querySelector("#cases");
+    const searchElement = document.querySelector("#search");
+    const personElement = document.querySelector("#person");
+    const statusElement = document.querySelector("#status");
+    const countElement = document.querySelector("#count");
+    const presidentialCandidates = new Set([
+      "Luiz Inácio Lula da Silva",
+      "Flávio Bolsonaro"
+    ]);
+    let records = [];
+
+    function addOption(select, value) {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      select.append(option);
+    }
+
+    function statusClass(type) {
+      if (type === "Investigação") return "status-investigation";
+      if (type === "Alegação") return "status-allegation";
+      if (type === "Condenação anulada" || type === "Ação anulada") return "status-annulled";
+      if (type === "Absolvição") return "status-acquittal";
+      if (type === "Denúncia rejeitada") return "status-rejected";
+      return "";
+    }
+
+    function makeText(tag, className, text) {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      element.textContent = text;
+      return element;
+    }
+
+    function render() {
+      const query = searchElement.value.trim().toLocaleLowerCase("pt-BR");
+      const person = personElement.value;
+      const status = statusElement.value;
+      const filtered = records.filter((record) => {
+        const searchable = [record.candidato, record.categoria, record.afirmacao, record.explicacaoSimples, record.situacaoAtual]
+          .join(" ").toLocaleLowerCase("pt-BR");
+        return (!query || searchable.includes(query)) &&
+          (!person || record.candidato === person) &&
+          (!status || record.tipo === status);
+      }).sort((left, right) => {
+        const leftPriority = presidentialCandidates.has(left.candidato) ? 0 : 1;
+        const rightPriority = presidentialCandidates.has(right.candidato) ? 0 : 1;
+        return leftPriority - rightPriority || left.id - right.id;
+      });
+
+      casesElement.replaceChildren();
+      countElement.textContent = `${filtered.length} ${filtered.length === 1 ? "registro" : "registros"}`;
+
+      if (filtered.length === 0) {
+        casesElement.append(makeText("p", "empty", "Nenhum caso encontrado com esses filtros."));
+        return;
+      }
+
+      for (const record of filtered) {
+        const article = document.createElement("article");
+        article.className = "case";
+
+        const meta = document.createElement("div");
+        meta.className = "case-meta";
+        const isCandidate = presidentialCandidates.has(record.candidato);
+        meta.append(makeText("span", isCandidate ? "person person-candidate" : "person", record.candidato));
+        if (isCandidate)
+          meta.append(makeText("span", "candidate-label", "Candidato à Presidência · 2026"));
+        const badge = makeText("span", `status ${statusClass(record.tipo)}`, record.tipo);
+        meta.append(badge);
+        const time = document.createElement("time");
+        time.dateTime = record.data;
+        time.textContent = new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium", timeZone: "UTC" })
+          .format(new Date(`${record.data}T00:00:00Z`));
+        meta.append(time);
+
+        const content = document.createElement("div");
+        content.append(makeText("h2", "", record.categoria));
+        content.append(makeText("p", "claim", record.afirmacao));
+        const explanation = document.createElement("p");
+        explanation.className = "plain-language";
+        explanation.append(makeText("strong", "", "Em palavras simples: "));
+        explanation.append(document.createTextNode(record.explicacaoSimples));
+        content.append(explanation);
+        content.append(makeText("p", "claim", `Situação: ${record.situacaoAtual}`));
+
+        try {
+          const source = new URL(record.fonte);
+          if (source.protocol === "https:" || source.protocol === "http:") {
+            const link = document.createElement("a");
+            link.className = "source";
+            link.href = source.href;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = "Ler a fonte original";
+            content.append(link);
+          }
+        } catch {
+          content.append(makeText("span", "", "Fonte indisponível"));
+        }
+
+        article.append(meta, content);
+        casesElement.append(article);
+      }
+    }
+
+    async function loadRecords() {
+      try {
+        const response = await fetch("/api/evidencias");
+        if (!response.ok) throw new Error("Não foi possível carregar os casos.");
+        records = await response.json();
+        [...new Set(records.map((record) => record.candidato))].sort().forEach((value) => addOption(personElement, value));
+        [...new Set(records.map((record) => record.tipo))].sort().forEach((value) => addOption(statusElement, value));
+        render();
+      } catch {
+        casesElement.replaceChildren(makeText("p", "error", "Não foi possível carregar os registros. Verifique se a API está em execução e tente atualizar a página."));
+      }
+    }
+
+    searchElement.addEventListener("input", render);
+    personElement.addEventListener("change", render);
+    statusElement.addEventListener("change", render);
+    loadRecords();
+  </script>
+</body>
+</html>

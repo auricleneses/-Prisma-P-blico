@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: prisma-publico
+    runtime: docker
+    plan: starter
+    region: oregon
+    healthCheckPath: /api/status
+    disk:
+      name: prisma-public-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: ASPNETCORE_HTTP_PORTS
+        value: "10000"
+      - key: PRISMA_DATA_DIR
+        value: /data
+      - key: PRISMA_ADMIN_KEY
+        sync: false
